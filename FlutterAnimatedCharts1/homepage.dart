@@ -14,7 +14,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   List<charts.Series<Pollution, String>> _seriesData;
   List<charts.Series<Electricity, String>> _seriesPieData;
-  List<charts.Series<Vehicles, String>> _seriesLineData;
+  List<charts.Series<Vehicles, int>> _seriesLineData;
 
   _generateData() {
     var data1 = [
@@ -40,26 +40,26 @@ class _HomePageState extends State<HomePage> {
     ];
 
     var linedata = [
-      new Vehicles('June', 56),
-      new Vehicles('July', 55),
-      new Vehicles('August', 60),
-      new Vehicles('September', 61),
-      new Vehicles('October', 70),
+      new Vehicles(1, 56),
+      new Vehicles(2, 55),
+      new Vehicles(3, 60),
+      new Vehicles(4, 61),
+      new Vehicles(5, 70),
     ];
     var linedata1 = [
-      new Vehicles('June', 46),
-      new Vehicles('July', 45),
-      new Vehicles('August', 50),
-      new Vehicles('September', 51),
-      new Vehicles('October', 60),
+      new Vehicles(1, 46),
+      new Vehicles(2, 45),
+      new Vehicles(3, 50),
+      new Vehicles(4, 51),
+      new Vehicles(5, 60),
     ];
 
     var linedata2 = [
-      new Vehicles('June', 24),
-      new Vehicles('July', 25),
-      new Vehicles('August', 40),
-      new Vehicles('September', 45),
-      new Vehicles('October', 60),
+      new Vehicles(1, 24),
+      new Vehicles(2, 25),
+      new Vehicles(3, 40),
+      new Vehicles(4, 45),
+      new Vehicles(5, 60),
     ];
 
     _seriesData.add(
@@ -134,7 +134,7 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     _seriesData = List<charts.Series<Pollution, String>>();
     _seriesPieData = List<charts.Series<Electricity, String>>();
-    _seriesLineData = List<charts.Series<Vehicles, String>>();
+    _seriesLineData = List<charts.Series<Vehicles,int>>();
     _generateData();
   }
 
@@ -254,7 +254,7 @@ class Pollution {
 }
 
 class Vehicles {
-  String month;
+  int month;
   double emissions;
 
   Vehicles(this.month, this.emissions);
