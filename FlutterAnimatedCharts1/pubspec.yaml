@@ -1,5 +1,5 @@
-name: flutteranimatedchartsapp
-description: A new Flutter project.
+name: new_chart
+description: A new Flutter application.
 
 # The following defines the version and build number for your application.
 # A version number is three numbers separated by dots, like 1.2.43
@@ -25,14 +25,15 @@ dependencies:
   cupertino_icons: ^0.1.2
   font_awesome_flutter: ^8.2.0
   charts_flutter: ^0.6.0
+  pie_chart: ^1.2.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  syncfusion_flutter_charts: ^1.0.0-beta.3
+
 
 # For information on the generic Dart part of this file, see the
-# following page: https://www.dartlang.org/tools/pub/pubspec
+# following page: https://dart.dev/tools/pub/pubspec
 
 # The following section is specific to Flutter.
 flutter:
@@ -48,10 +49,10 @@ flutter:
   #  - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
-  # https://flutter.io/assets-and-images/#resolution-aware.
+  # https://flutter.dev/assets-and-images/#resolution-aware.
 
   # For details regarding adding assets from package dependencies, see
-  # https://flutter.io/assets-and-images/#from-packages
+  # https://flutter.dev/assets-and-images/#from-packages
 
   # To add custom fonts to your application, add a fonts section here,
   # in this "flutter" section. Each entry in this list should have a
@@ -71,4 +72,4 @@ flutter:
   #         weight: 700
   #
   # For details regarding fonts from package dependencies,
-  # see https://flutter.io/custom-fonts/#from-packages
+  # see https://flutter.dev/custom-fonts/#from-packages
