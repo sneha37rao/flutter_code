@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-//import 'package:syncfusion_flutter_charts/charts.dart';
+import 'package:pie_chart/pie_chart.dart';
+import 'DonutPieChart.dart';
 
 class HomePage extends StatefulWidget {
   final Widget child;
@@ -11,10 +12,18 @@ class HomePage extends StatefulWidget {
   _HomePageState createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+Map<String, double> dataMap = new Map();
+
+class _HomePageState extends State<HomePage>{
   List<charts.Series<Pollution, String>> _seriesData;
-  List<charts.Series<Electricity, String>> _seriesPieData;
-  List<charts.Series<Vehicles, int>> _seriesLineData;
+  List<charts.Series<Electricity1, String>> _seriesPieData;
+  List<charts.Series<Vehicles,int>> _seriesLineData;
+  List<charts.Series<Electricity, String>>_seriesPieData1;
+
+  TabController _tabController;
+  ScrollController _scrollViewController;
+
+  int _counter = 0;
 
   _generateData() {
     var data1 = [
@@ -33,34 +42,47 @@ class _HomePageState extends State<HomePage> {
       new Pollution('July',3),
       new Pollution('August',3),
     ];
+
     var piedata = [
-      new Electricity('Renewable Onsite', 8),
-      new Electricity('Renewable Wheeled', 10),
-      new Electricity('Purchased Grid', 15),
+      new Electricity1('Renewable Onsite', 8),
+      new Electricity1('Renewable Wheeled', 10),
+      new Electricity1('Purchased Grid', 15),
+    ];
+
+    var piedata1 = [
+      new Electricity('Renewable', 18, Color(0xfffdbe19)),
+      new Electricity('Purchased Grid', 15, Color(0xff990099)),
     ];
 
     var linedata = [
-      new Vehicles(1, 56),
-      new Vehicles(2, 55),
-      new Vehicles(3, 60),
-      new Vehicles(4, 61),
-      new Vehicles(5, 70),
+      new Vehicles(2, 56),
+      new Vehicles(4, 55),
+      new Vehicles(6, 60),
+      new Vehicles(8, 61),
+      new Vehicles(10, 70),
     ];
     var linedata1 = [
-      new Vehicles(1, 46),
-      new Vehicles(2, 45),
-      new Vehicles(3, 50),
-      new Vehicles(4, 51),
-      new Vehicles(5, 60),
+      new Vehicles(2, 46),
+      new Vehicles(4, 45),
+      new Vehicles(6, 50),
+      new Vehicles(8, 51),
+      new Vehicles(10, 60),
     ];
 
     var linedata2 = [
-      new Vehicles(1, 24),
-      new Vehicles(2, 25),
-      new Vehicles(3, 40),
-      new Vehicles(4, 45),
-      new Vehicles(5, 60),
+      new Vehicles(2, 24),
+      new Vehicles(4, 25),
+      new Vehicles(6, 40),
+      new Vehicles(8, 45),
+      new Vehicles(10, 60),
     ];
+
+      final data = [
+        new LinearSales(0, 100),
+        new LinearSales(1, 75),
+        new LinearSales(2, 25),
+        new LinearSales(3, 5),
+      ];
 
     _seriesData.add(
       charts.Series(
@@ -92,11 +114,24 @@ class _HomePageState extends State<HomePage> {
     _seriesPieData.add(
       charts.Series(
         id:'Pollution',
-      domainFn: (Electricity e, _) => e.emission,
-      measureFn: (Electricity e, _) => e.emission_value,
-      data: piedata,
-      // Set a label accessor to control the text of the arc label.
-      labelAccessorFn: (Electricity e, _) => '${e.emission}: ${e.emission_value}',
+        domainFn: (Electricity1 e, _) => e.emission,
+        measureFn: (Electricity1 e, _) => e.emission_value,
+        data: piedata,
+        // Set a label accessor to control the text of the arc label.
+        labelAccessorFn: (Electricity1 e, _) => '${e.emission}: ${e.emission_value}',
+      ),
+    );
+
+    _seriesPieData1.add(
+      charts.Series(
+        id:'Pollution',
+        domainFn: (Electricity e, _) => e.emission,
+        measureFn: (Electricity e, _) => e.emission_value,
+        colorFn: (Electricity e, _) =>
+            charts.ColorUtil.fromDartColor(e.colorval),
+        data: piedata1,
+        // Set a label accessor to control the text of the arc label.
+        labelAccessorFn: (Electricity e, _) => '${e.emission}: ${e.emission_value}',
       ),
     );
 
@@ -133,116 +168,118 @@ class _HomePageState extends State<HomePage> {
     // TODO: implement initState
     super.initState();
     _seriesData = List<charts.Series<Pollution, String>>();
-    _seriesPieData = List<charts.Series<Electricity, String>>();
+    _seriesPieData = List<charts.Series<Electricity1, String>>();
     _seriesLineData = List<charts.Series<Vehicles,int>>();
+    _seriesPieData1= List<charts.Series<Electricity, String>>();
     _generateData();
+
+    dataMap.putIfAbsent("Flutter", () => 5);
+    dataMap.putIfAbsent("React", () => 3);
+    dataMap.putIfAbsent("Xamarin", () => 2);
+    dataMap.putIfAbsent("Ionic", () => 2);
   }
 
   @override
+  void dispose() {
+    _tabController.dispose();
+    _scrollViewController.dispose();
+    super.dispose();
+  }
+
+  void _incrementCounter() {
+    setState(() {
+      // This call to setState tells the Flutter framework that something has
+      // changed in this State, which causes it to rerun the build method below
+      // so that the display can reflect the updated values. If we changed
+      // _counter without calling setState(), then the build method would not be
+      // called again, and so nothing would appear to happen.
+      _counter++;
+    });
+  }
+
+
+  @override
   Widget build(BuildContext context) {
+    var dpc = DonutPieChart.withSampleData();
     return MaterialApp(
-      home: DefaultTabController(
-        length: 3,
-        child: Scaffold(
-          appBar: AppBar(
-            backgroundColor: Color(0xff1976d2),
-            //backgroundColor: Color(0xff308e1c),
-            bottom: TabBar(
-              indicatorColor: Color(0xff9962D0),
-              tabs: [
-                Tab(
-                  icon: Icon(FontAwesomeIcons.solidChartBar),
-                ),
-                Tab(icon: Icon(FontAwesomeIcons.chartPie)),
-                Tab(icon: Icon(FontAwesomeIcons.chartLine)),
-              ],
-            ),
-            title: Text('Flutter Charts'),
-          ),
-          body: TabBarView(
-            children: [
-              Padding(
-                padding: EdgeInsets.all(8.0),
-                child: Container(
-                  child: Center(
-                    child: Column(
-                      children: <Widget>[
-                        Text(
-                            'Direct Emissions by lpg-cooking, lpg-lab  and diesel (in kg)',style: TextStyle(fontSize: 24.0,fontWeight: FontWeight.bold),),
-                        Expanded(
-                          child: charts.BarChart(
-                            _seriesData,
-                            animate: true,
-                            barGroupingType: charts.BarGroupingType.stacked,
-                            behaviors: [new charts.SeriesLegend()],
-                            animationDuration: Duration(seconds: 1),
-                          ),
-                        ),
-                      ],
-                    ),
+      home: Scaffold(
+            body:Center(
+                child: Center(
+                child:Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                SizedBox(height: 30.0,
+                    child: Text(
+                      'Direct Emissions by lpg-cooking, lpg-lab  and diesel (in kg)',style: TextStyle(fontSize: 24.0,fontWeight: FontWeight.bold),),
                   ),
-                ),
-              ),
-              SafeArea(
-                child: Padding(
-                  padding: EdgeInsets.all(5.0),
-                  child: Container(
-                    child: Center(
-                      child: Column(
-                        children: <Widget>[
-                          Text(
-                              'CO2 produced by electricity',style: TextStyle(fontSize: 24.0,fontWeight: FontWeight.bold),),
-                              SizedBox(height: 10.0),
-                          Expanded(
-                            child: charts.PieChart(_seriesPieData,
-                                animate: true,
-                              animationDuration: Duration(seconds: 1),
-                                defaultRenderer: new charts.ArcRendererConfig(arcRendererDecorators: [
-                                  new charts.ArcLabelDecorator(
-                                      labelPosition: charts.ArcLabelPosition.inside)
-                                ],
-                                ),
+                  Flexible( flex: 5,
+                    child:
+                    Card(
+                            child: charts.BarChart(
+                        _seriesData,
+                        animate: true,
+                        barGroupingType: charts.BarGroupingType.stacked,
+                        behaviors: [new charts.SeriesLegend()],
+                        animationDuration: Duration(seconds: 1),
+                      ),
                             ),
+                  ),
+                  SizedBox(height: 30.0,
+                    child:Text(
+                      'CO2 produced by electricity',style: TextStyle(fontSize: 24.0,fontWeight: FontWeight.bold),),
+                  ),
+                  Flexible(
+                    flex:5,
+                    child:
+                    Card(
+                      child:Stack(
+                        children:<Widget>[
+                          Container(
+                            //color: Colors.blue,
+                            height: 300.0,
+                            width: 300.0,
+                            child: dpc,
                           ),
+                          Container(
+                            // color: Colors.blue,
+                            height: 300.0,
+                            width: 300.0,
+                            child: PieChart(dataMap: dataMap, showLegends: false,),
+                          )
                         ],
                       ),
                     ),
                   ),
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.all(8.0),
-                child: Container(
-                  child: Center(
-                    child:Column(
-                    children: <Widget>[
-                      Text(
-                        'CO2 in kg produced by vehicles',style: TextStyle(fontSize: 24.0,fontWeight: FontWeight.bold),),
-                      Expanded(
-                        child: charts.LineChart(
-                            _seriesLineData,
-                            defaultRenderer: new charts.LineRendererConfig(
-                                includeArea: true, stacked: true),
-                            animate: true,
-                            animationDuration: Duration(seconds: 1),
-                            behaviors: [
-                              new charts.SeriesLegend(),
-                              new charts.ChartTitle('Pollution',
-                                  behaviorPosition: charts.BehaviorPosition.bottom,
-                                  titleOutsideJustification:charts.OutsideJustification.middleDrawArea),
-                            ]
-                        ),
-                      ),
-                    ],
+                  SizedBox(height: 30.0,
+                    child:Text(
+                      'CO2 in kg produced by vehicles',style: TextStyle(fontSize: 24.0,fontWeight: FontWeight.bold),),
                   ),
-                ),
+                  Flexible(
+                    flex:5,
+                    child:
+                    Card(
+                      child: charts.LineChart(
+                          _seriesLineData,
+                          defaultRenderer: new charts.LineRendererConfig(
+                              includeArea: true, stacked: true),
+                          animate: true,
+                          animationDuration: Duration(seconds: 1),
+                          behaviors: [
+                            new charts.SeriesLegend(),
+                            new charts.ChartTitle('Months',
+                                behaviorPosition: charts.BehaviorPosition.bottom,
+                                titleOutsideJustification:charts.OutsideJustification.middleDrawArea),
+                          ]
+                      ),
+                    ),
+                  ),
+                ],
               ),
-      ),
-      ],
-    ),
-          ),
         ),
-    );
+    ),
+      ),
+        );
   }
 }
 
@@ -261,7 +298,15 @@ class Vehicles {
 }
 
 class Electricity{
-    String emission;
-    double emission_value;
-    Electricity(this.emission,this.emission_value);
+  String emission;
+  double emission_value;
+  Color colorval;
+  Electricity(this.emission,this.emission_value,this.colorval);
+}
+
+class Electricity1{
+  String emission;
+  double emission_value;
+
+  Electricity1(this.emission,this.emission_value);
 }
